@@ -52,6 +52,7 @@ module Harfbuzz
   ], :void
   attach_function :hb_buffer_guess_segment_properties, [:hb_buffer_t], :void
   attach_function :hb_buffer_set_direction, [:hb_buffer_t, :hb_direction_t], :void
+  attach_function :hb_direction_from_string, [:string, :int], :hb_direction_t
   attach_function :hb_buffer_set_language, [:hb_buffer_t, :hb_language_t], :void
   attach_function :hb_buffer_get_length, [:hb_buffer_t], :uint
   attach_function :hb_buffer_get_glyph_infos, [
@@ -88,8 +89,8 @@ module Harfbuzz
     end
 
     def set_direction(direction)
-      direction = direction_from_string(direction) if direction.is_a?(String)
-      Harfbuzz.hb_buffer_set_direction(@hb_buffer, direction)
+      hb_direction = Harfbuzz.hb_direction_from_string(direction, -1)
+      Harfbuzz.hb_buffer_set_direction(@hb_buffer, hb_direction)
     end
 
     def normalize_glyphs
@@ -115,25 +116,6 @@ module Harfbuzz
       length = length_ptr.read_uint
       length.times.map do |i|
         GlyphPosition.new(positions_ptr + (i * GlyphPosition.size))
-      end
-    end
-
-    private
-
-    def direction_from_string(direction)
-      return :HB_DIRECTION_INVALID unless direction
-
-      case direction[0]
-      when 'l'
-        :HB_DIRECTION_LTR
-      when 'r'
-        :HB_DIRECTION_RTL
-      when 't'
-        :HB_DIRECTION_TTB
-      when 'b'
-        :HB_DIRECTION_BTT
-      else
-        :HB_DIRECTION_INVALID
       end
     end
 
