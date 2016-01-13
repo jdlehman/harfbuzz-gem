@@ -3,6 +3,13 @@ module Harfbuzz
   typedef :pointer, :hb_buffer_t
   typedef :uint32, :hb_mask_t
   typedef :int32, :hb_position_t
+  typedef enum(
+    :HB_DIRECTION_INVALID, 0,
+    :HB_DIRECTION_LTR, 4,
+    :HB_DIRECTION_RTL,
+    :HB_DIRECTION_TTB,
+    :HB_DIRECTION_BTT
+  ), :hb_direction_t
 
   class GlyphInfo < FFI::Struct
 
@@ -43,6 +50,7 @@ module Harfbuzz
     :int,           # item_length
   ], :void
   attach_function :hb_buffer_guess_segment_properties, [:hb_buffer_t], :void
+  attach_function :hb_buffer_set_direction, [:hb_buffer_t, :hb_direction_t], :void
   attach_function :hb_buffer_get_length, [:hb_buffer_t], :uint
   attach_function :hb_buffer_get_glyph_infos, [
     :hb_buffer_t,   # buffer
@@ -71,6 +79,10 @@ module Harfbuzz
 
     def guess_segment_properties
       Harfbuzz.hb_buffer_guess_segment_properties(@hb_buffer)
+    end
+
+    def set_direction(direction)
+      Harfbuzz.hb_buffer_set_direction(@hb_buffer, direction)
     end
 
     def normalize_glyphs

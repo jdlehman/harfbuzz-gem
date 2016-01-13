@@ -43,6 +43,7 @@ buffer.add_utf8('WAVE first.')
 
 if true
   buffer.guess_segment_properties
+  buffer.set_direction(:HB_DIRECTION_LTR)
 else
   #FIXME: these functions are not yet bound
   # hb_buffer_set_direction(buffer, hb_direction_from_string(direction, -1))
