@@ -43,10 +43,9 @@ buffer.add_utf8('WAVE first.')
 
 if true
   buffer.guess_segment_properties
-  buffer.set_direction(:HB_DIRECTION_LTR)
+  buffer.set_direction('left-to-right')
 else
   #FIXME: these functions are not yet bound
-  # hb_buffer_set_direction(buffer, hb_direction_from_string(direction, -1))
   # hb_buffer_set_script(buffer, hb_script_from_string(script, -1))
   # hb_buffer_set_language(buffer, hb_language_from_string(language, -1))
   # hb_buffer_set_flags(buffer, shape_flags)

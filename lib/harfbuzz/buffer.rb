@@ -82,6 +82,7 @@ module Harfbuzz
     end
 
     def set_direction(direction)
+      direction = direction_from_string(direction) if direction.is_a?(String)
       Harfbuzz.hb_buffer_set_direction(@hb_buffer, direction)
     end
 
@@ -108,6 +109,25 @@ module Harfbuzz
       length = length_ptr.read_uint
       length.times.map do |i|
         GlyphPosition.new(positions_ptr + (i * GlyphPosition.size))
+      end
+    end
+
+    private
+
+    def direction_from_string(direction)
+      return :HB_DIRECTION_INVALID unless direction
+
+      case direction[0]
+      when 'l'
+        :HB_DIRECTION_LTR
+      when 'r'
+        :HB_DIRECTION_RTL
+      when 't'
+        :HB_DIRECTION_TTB
+      when 'b'
+        :HB_DIRECTION_BTT
+      else
+        :HB_DIRECTION_INVALID
       end
     end
 
